@@ -1,0 +1,944 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070b18">
+<title>Karl | Developer Universe</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  color-scheme: dark;
+  --bg: #070b18;
+  --header: rgba(7,11,24,.88);
+  --panel: rgba(13,22,44,.84);
+  --panel2: #0b1328;
+  --text: #eef4ff;
+  --muted: #a2b0cc;
+  --blue: #35d9ff;
+  --purple: #a855f7;
+  --border: rgba(68,145,255,.30);
+  --shadow: rgba(38,104,255,.15);
+}
+
+body.light {
+  color-scheme: light;
+  --bg: #f2f6ff;
+  --header: rgba(245,248,255,.91);
+  --panel: rgba(255,255,255,.91);
+  --panel2: #e8effd;
+  --text: #17213c;
+  --muted: #56647d;
+  --blue: #007eae;
+  --purple: #7939ce;
+  --border: rgba(54,100,180,.28);
+  --shadow: rgba(48,93,180,.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, sans-serif;
+  overflow-x: hidden;
+  transition: background .3s, color .3s;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse at 75% 15%, #6536c52a, transparent 38%),
+    radial-gradient(ellipse at 15% 70%, #0076c31c, transparent 40%);
+}
+
+body.light::before {
+  background:
+    radial-gradient(ellipse at 75% 15%, #c5b5ff55, transparent 40%),
+    radial-gradient(ellipse at 15% 70%, #8ee7ff44, transparent 40%);
+}
+
+a { color: inherit; text-decoration: none; }
+
+button { font: inherit; }
+
+#stars {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+header {
+  height: 72px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 0 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: var(--header);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: 800;
+  white-space: nowrap;
+  letter-spacing: -.7px;
+}
+
+.logo b { color: var(--blue); }
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+nav a {
+  color: var(--muted);
+  font-size: .84rem;
+  transition: color .2s;
+}
+
+nav a:hover, nav a.active { color: var(--blue); }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font: .75rem 'JetBrains Mono', monospace;
+  color: #27c987;
+  white-space: nowrap;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #37eea2;
+  box-shadow: 0 0 12px #37eea2;
+  animation: pulse 2s infinite;
+}
+
+.icon-btn {
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  min-width: 39px;
+  height: 37px;
+  padding: 0 10px;
+  cursor: pointer;
+  transition: .25s;
+}
+
+.icon-btn:hover {
+  border-color: var(--blue);
+  box-shadow: 0 0 18px var(--shadow);
+  transform: translateY(-2px);
+}
+
+main { max-width: 1500px; margin: auto; }
+
+.hero {
+  min-height: 720px;
+  padding: 155px 8% 110px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  width: 62%;
+  max-width: 720px;
+}
+
+.eyebrow, .section-label {
+  color: var(--blue);
+  font: .79rem 'JetBrains Mono', monospace;
+  letter-spacing: .6px;
+}
+
+.eyebrow { margin-bottom: 24px; }
+
+h1 {
+  font-size: clamp(3.2rem, 7vw, 6rem);
+  line-height: 1.07;
+  letter-spacing: -4px;
+  margin-bottom: 23px;
+}
+
+.gradient {
+  background: linear-gradient(100deg, var(--blue), #7284ff, #cf75ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cursor {
+  color: var(--blue);
+  animation: blink .8s steps(2) infinite;
+}
+
+.roles {
+  font: 600 .98rem 'JetBrains Mono', monospace;
+  color: var(--muted);
+  margin-bottom: 23px;
+}
+
+.description {
+  color: var(--muted);
+  line-height: 1.9;
+  max-width: 570px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+  margin-top: 30px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px 19px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  font-size: .86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .25s, box-shadow .25s, border-color .25s;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  border-color: var(--blue);
+  box-shadow: 0 0 23px var(--shadow);
+}
+
+.btn.primary {
+  background: linear-gradient(110deg, #087fe9, #7540ec);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 0 25px #654aff32;
+}
+
+.planet {
+  position: absolute;
+  right: 9%;
+  top: 19%;
+  width: clamp(175px, 27vw, 330px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    repeating-linear-gradient(150deg, transparent 0 12px, #2da5ff32 14px, transparent 19px),
+    radial-gradient(circle at 28% 25%, #9df7ff, transparent 5%),
+    radial-gradient(circle at 30% 30%, #168bff, #262b91 43%, #090b27 75%);
+  box-shadow: 0 0 65px #246bff50, inset -25px -25px 50px #02040d;
+  animation: float 7s ease-in-out infinite;
+}
+
+.planet::before {
+  content: "";
+  position: absolute;
+  inset: 32% -27%;
+  border: 3px solid #a855f7;
+  border-radius: 50%;
+  transform: rotate(-22deg);
+  box-shadow: 0 0 18px #a855f7;
+}
+
+.planet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid #69ddff99;
+}
+
+.terminal {
+  position: absolute;
+  right: 7%;
+  bottom: 70px;
+  z-index: 4;
+  width: 350px;
+  max-width: 42%;
+  background: var(--panel2);
+  border: 1px solid var(--purple);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 35px #633cff30;
+  animation: terminalIn 1s ease both;
+}
+
+.terminal-head {
+  padding: 12px 15px;
+  background: #7b67ff15;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font: .72rem 'JetBrains Mono', monospace;
+}
+
+.terminal-body {
+  padding: 16px;
+  font: .72rem/2 'JetBrains Mono', monospace;
+  color: var(--blue);
+  overflow-wrap: anywhere;
+}
+
+.terminal-body .pink { color: var(--purple); }
+.terminal-body .green { color: #48dda0; }
+
+section { padding: 78px 8%; }
+
+.section-label { margin-bottom: 15px; }
+
+h2 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  letter-spacing: -1.3px;
+  margin-bottom: 18px;
+}
+
+.muted {
+  color: var(--muted);
+  line-height: 1.9;
+  max-width: 760px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 30px;
+}
+
+.card {
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel);
+  position: relative;
+  overflow: hidden;
+  transition: transform .3s, border-color .3s, box-shadow .3s;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: #428bff0b;
+  filter: blur(20px);
+  top: -60px;
+  right: -50px;
+  pointer-events: none;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: var(--blue);
+  box-shadow: 0 12px 35px var(--shadow);
+}
+
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 17px;
+}
+
+.card h3 { font-size: 1.1rem; margin-bottom: 12px; }
+
+.card p {
+  color: var(--muted);
+  line-height: 1.85;
+  font-size: .9rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.tag {
+  color: var(--blue);
+  background: #208bff0d;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 7px 10px;
+  font: .72rem 'JetBrains Mono', monospace;
+}
+
+.project-card {
+  border-color: #a855f766;
+  background: linear-gradient(145deg, #28134366, var(--panel2));
+}
+
+.project-card .btn { margin-top: 22px; }
+
+.project-status {
+  color: #45dba0;
+  font: .72rem 'JetBrains Mono', monospace;
+  margin-bottom: 15px;
+}
+
+.build-card {
+  background: linear-gradient(145deg, #09243a99, var(--panel));
+}
+
+.code-line {
+  margin-top: 20px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #02081515;
+  font: .77rem/2 'JetBrains Mono', monospace;
+  color: var(--blue);
+  overflow-wrap: anywhere;
+}
+
+.code-line .purple { color: var(--purple); }
+.code-line .green { color: #3bd9a0; }
+
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+  margin-top: 28px;
+}
+
+.social {
+  text-align: center;
+  padding: 23px 14px;
+}
+
+.social .card-icon { font-size: 2rem; }
+
+.social .btn {
+  width: 100%;
+  margin-top: 17px;
+  padding: 11px 8px;
+  font-size: .78rem;
+}
+
+.contact {
+  text-align: center;
+  padding-top: 65px;
+  padding-bottom: 90px;
+}
+
+.contact .muted { margin: auto; }
+
+.contact .actions { justify-content: center; }
+
+footer {
+  border-top: 1px solid var(--border);
+  text-align: center;
+  padding: 30px 7%;
+  color: var(--muted);
+  font-size: .8rem;
+  line-height: 2;
+}
+
+footer span { color: var(--blue); }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-19px) rotate(4deg); }
+}
+
+@keyframes blink { to { opacity: 0; } }
+
+@keyframes pulse {
+  50% { opacity: .55; box-shadow: 0 0 3px #37eea2; }
+}
+
+@keyframes terminalIn {
+  from { opacity: 0; transform: translate(25px, 15px); }
+  to { opacity: 1; transform: translate(0, 0); }
+}
+
+@media (max-width: 900px) {
+  header { padding: 0 4%; gap: 12px; }
+  nav { gap: 13px; }
+  nav a { font-size: .76rem; }
+  .hero { padding-left: 7%; padding-right: 7%; }
+  .hero-content { width: 70%; }
+  .planet { right: 4%; opacity: .7; }
+  .terminal { right: 5%; width: 330px; }
+  section { padding-left: 7%; padding-right: 7%; }
+}
+
+@media (max-width: 650px) {
+  header {
+    height: auto;
+    min-height: 70px;
+    padding: 13px 5%;
+    flex-wrap: wrap;
+    gap: 13px;
+  }
+
+  nav {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    gap: 7px;
+  }
+
+  nav a { font-size: .72rem; }
+  .logo { font-size: 1rem; }
+  .header-right { gap: 7px; }
+  .status { font-size: .69rem; }
+
+  .hero {
+    min-height: 850px;
+    padding: 160px 6% 280px;
+    align-items: flex-start;
+  }
+
+  .hero-content { width: 100%; }
+  h1 { font-size: clamp(3rem, 12vw, 4.5rem); letter-spacing: -2.5px; }
+  .roles { font-size: .76rem; }
+  .planet { width: 170px; top: auto; bottom: 80px; right: 9%; }
+  .terminal { width: 83%; max-width: none; bottom: 23px; right: 5%; }
+  .terminal-body { font-size: .66rem; }
+
+  section { padding: 58px 6%; }
+  .grid { grid-template-columns: 1fr; }
+  .social-grid { grid-template-columns: 1fr; }
+  .social { text-align: left; }
+  .social .btn { width: auto; min-width: 170px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+</style>
+</head>
+
+<body>
+<canvas id="stars" aria-hidden="true"></canvas>
+
+<header>
+  <a href="#home" class="logo">K<span>&lt;/&gt;</span> Karl</a>
+
+  <nav>
+    <a href="#home" class="active" data-i18n="navHome">Home</a>
+    <a href="#about" data-i18n="navAbout">Über mich</a>
+    <a href="#projects" data-i18n="navProjects">Projekte</a>
+    <a href="#social" data-i18n="navSocial">Social Media</a>
+  </nav>
+
+  <div class="header-right">
+    <div class="status">
+      <span class="status-dot"></span>
+      <span data-i18n="status">Building</span>
+    </div>
+
+    <button class="icon-btn" id="themeBtn"
+            aria-label="Farbschema wechseln" title="Dark / White Mode">☀️</button>
+
+    <button class="icon-btn" id="langBtn"
+            aria-label="Sprache wechseln" title="Deutsch / English">EN</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div class="planet" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <div class="eyebrow" data-i18n="welcome">// Willkommen auf meiner Website</div>
+
+      <h1>
+        <span data-i18n="hello">Hey, ich bin</span><br>
+        <span class="gradient">Karl.</span>
+        <span class="cursor">|</span>
+      </h1>
+
+      <div class="roles" data-i18n="roles">
+        Coder × Gamer × Space Enthusiast
+      </div>
+
+      <p class="description" data-i18n="intro">
+        Schön, dass du hier bist! Ich interessiere mich für
+        Programmierung, Galaxien und spannende Projekte.
+        Nebenbei code ich an einem Videospiel bei NoEscape Studios.
+        Hier findest du mehr über meine Projekte und Community.
+      </p>
+
+      <div class="actions">
+        <a class="btn primary" href="#projects" data-i18n="heroProject">
+          Meine Projekte ↗
+        </a>
+        <a class="btn" href="#about" data-i18n="heroAbout">
+          Mehr über mich ↓
+        </a>
+      </div>
+    </div>
+
+    <div class="terminal">
+      <div class="terminal-head">● karl@universe — terminal</div>
+      <div class="terminal-body">
+        <div>&gt; <span class="pink">welcome_to_my_world();</span></div>
+        <div>&gt; name: "Karl"</div>
+        <div>&gt; passions: ["Coding", "Space"]</div>
+        <div>&gt; project: "NoEscape Studios"</div>
+        <div>&gt; status: <span class="green">"Building cool things"</span></div>
+        <div>&gt; <span class="cursor">_</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="reveal">
+    <div class="section-label" data-i18n="aboutLabel">01 / ÜBER MICH</div>
+    <h2 data-i18n="aboutTitle">Neugierig auf <span class="gradient">mehr.</span></h2>
+    <p class="muted" data-i18n="aboutText">
+      Ich bin Karl und begeistere mich für Programmierung,
+      Technik, Videospiele und Astronomie. Ich probiere gerne
+      neue Dinge aus, lerne dazu und setze meine Ideen in Code um.
+      Besonders faszinieren mich Galaxien und die Geheimnisse des Universums.
+    </p>
+
+    <div class="tags">
+      <span class="tag">💻 Coding</span>
+      <span class="tag" data-i18n="tagSpace">🌌 Astronomie</span>
+      <span class="tag" data-i18n="tagGames">🎮 Gaming</span>
+      <span class="tag" data-i18n="tagCreative">🚀 Kreativität</span>
+    </div>
+  </section>
+
+  <section id="projects" class="reveal">
+    <div class="section-label" data-i18n="projectLabel">02 / MEINE PROJEKTE</div>
+    <h2 data-i18n="projectTitle">Building something <span class="gradient">cool.</span></h2>
+
+    <div class="grid">
+      <article class="card project-card">
+        <div class="card-icon">🎮</div>
+        <div class="project-status">● <span data-i18n="projectStatus">PROJEKT / GAME DEVELOPMENT</span></div>
+        <h3>NoEscape Studios</h3>
+        <p data-i18n="gameDescription">
+          Ich bin an einem Videospielprojekt bei NoEscape Studios
+          beteiligt. Ich arbeite nebenbei am Projekt und freue mich
+          darauf, mehr mit der Community zu teilen.
+        </p>
+        <a class="btn primary"
+           href="https://discord.gg/3kadspZwBf"
+           target="_blank" rel="noopener noreferrer"
+           data-i18n="gameLink">Projekt-Discord ↗</a>
+      </article>
+
+      <article class="card build-card">
+        <div class="card-icon">⌨️</div>
+        <div class="section-label" data-i18n="buildingLabel">CURRENTLY BUILDING</div>
+        <h3 data-i18n="buildingTitle">Meine Coding-Welt</h3>
+        <p data-i18n="buildingText">
+          Ich entdecke neue Technologien, verbessere meine Fähigkeiten
+          und verwandle Ideen in Projekte. Schritt für Schritt entsteht
+          etwas Neues.
+        </p>
+
+        <div class="code-line">
+          <div>&gt; <span class="purple">learning</span> new things...</div>
+          <div>&gt; <span class="purple">building</span> new ideas...</div>
+          <div>&gt; status: <span class="green">in progress ✓</span></div>
+        </div>
+
+        <div class="tags">
+          <span class="tag">Development</span>
+          <span class="tag">Gaming</span>
+          <span class="tag">Space</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="social" class="reveal">
+    <div class="section-label" data-i18n="socialLabel">03 / SOCIAL MEDIA</div>
+    <h2 data-i18n="socialTitle">Stay <span class="gradient">connected.</span></h2>
+    <p class="muted" data-i18n="socialIntro">
+      Ich baue meine Social-Media-Präsenz auf. Schau vorbei
+      und werde Teil meiner Community!
+    </p>
+
+    <div class="social-grid">
+      <article class="card social">
+        <div class="card-icon">♪</div>
+        <h3>TikTok</h3>
+        <p data-i18n="tiktokDescription">Videos & Einblicke</p>
+        <a class="btn" href="https://www.tiktok.com/"
+           target="_blank" rel="noopener noreferrer"
+           data-i18n="tiktokLink">TikTok öffnen ↗</a>
+      </article>
+
+      <article class="card social">
+        <div class="card-icon">▶</div>
+        <h3>YouTube</h3>
+        <p data-i18n="youtubeDescription">Videos & Projekte</p>
+        <a class="btn" href="https://www.youtube.com/"
+           target="_blank" rel="noopener noreferrer"
+           data-i18n="youtubeLink">YouTube öffnen ↗</a>
+      </article>
+
+      <article class="card social">
+        <div class="card-icon">⌘</div>
+        <h3 data-i18n="discordTitle">Community Discord</h3>
+        <p data-i18n="discordDescription">Austausch, Community & News</p>
+        <a class="btn primary"
+           href="https://discord.gg/zerZRghUyW"
+           target="_blank" rel="noopener noreferrer"
+           data-i18n="discordLink">Discord beitreten ↗</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="contact reveal">
+    <div class="section-label" data-i18n="endLabel">// END OF TRANSMISSION</div>
+    <h2 data-i18n="endTitle">Stay curious.<br><span class="gradient">Keep creating.</span></h2>
+    <p class="muted" data-i18n="endText">
+      Code für Code, Idee für Idee. Das ist erst der Anfang.
+    </p>
+    <div class="actions">
+      <a class="btn primary" href="#home" data-i18n="backTop">Zurück nach oben ↑</a>
+      <a class="btn" href="https://discord.gg/zerZRghUyW"
+         target="_blank" rel="noopener noreferrer" data-i18n="joinCommunity">
+        Meine Community ↗
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p data-i18n="footer">Mit ♥ und Code von Karl erstellt.</p>
+  <p>© <span id="year"></span> Karl · <span data-i18n="rights">Alle Rechte vorbehalten.</span></p>
+</footer>
+
+<script>
+/* Dark / White Mode */
+const themeBtn = document.getElementById("themeBtn");
+
+themeBtn.addEventListener("click", () => {
+  const light = document.body.classList.toggle("light");
+  themeBtn.textContent = light ? "🌙" : "☀️";
+  themeBtn.title = light ? "Dark Mode" : "White Mode";
+  document.querySelector('meta[name="theme-color"]')
+    .setAttribute("content", light ? "#f2f6ff" : "#070b18");
+});
+
+/* Deutsch / English */
+const translations = {
+  de: {
+    navHome:"Home", navAbout:"Über mich", navProjects:"Projekte",
+    navSocial:"Social Media", status:"Building",
+    welcome:"// Willkommen auf meiner Website", hello:"Hey, ich bin",
+    roles:"Coder × Gamer × Space Enthusiast",
+    intro:"Schön, dass du hier bist! Ich interessiere mich für Programmierung, Galaxien und spannende Projekte. Nebenbei code ich an einem Videospiel bei NoEscape Studios. Hier findest du mehr über meine Projekte und Community.",
+    heroProject:"Meine Projekte ↗", heroAbout:"Mehr über mich ↓",
+    aboutLabel:"01 / ÜBER MICH", aboutTitle:'Neugierig auf <span class="gradient">mehr.</span>',
+    aboutText:"Ich bin Karl und begeistere mich für Programmierung, Technik, Videospiele und Astronomie. Ich probiere gerne neue Dinge aus, lerne dazu und setze meine Ideen in Code um. Besonders faszinieren mich Galaxien und die Geheimnisse des Universums.",
+    tagSpace:"🌌 Astronomie", tagGames:"🎮 Gaming", tagCreative:"🚀 Kreativität",
+    projectLabel:"02 / MEINE PROJEKTE",
+    projectTitle:'Building something <span class="gradient">cool.</span>',
+    projectStatus:"PROJEKT / GAME DEVELOPMENT",
+    gameDescription:"Ich bin an einem Videospielprojekt bei NoEscape Studios beteiligt. Ich arbeite nebenbei am Projekt und freue mich darauf, mehr mit der Community zu teilen.",
+    gameLink:"Projekt-Discord ↗", buildingLabel:"CURRENTLY BUILDING",
+    buildingTitle:"Meine Coding-Welt",
+    buildingText:"Ich entdecke neue Technologien, verbessere meine Fähigkeiten und verwandle Ideen in Projekte. Schritt für Schritt entsteht etwas Neues.",
+    socialLabel:"03 / SOCIAL MEDIA",
+    socialTitle:'Stay <span class="gradient">connected.</span>',
+    socialIntro:"Ich baue meine Social-Media-Präsenz auf. Schau vorbei und werde Teil meiner Community!",
+    tiktokDescription:"Videos & Einblicke", tiktokLink:"TikTok öffnen ↗",
+    youtubeDescription:"Videos & Projekte", youtubeLink:"YouTube öffnen ↗",
+    discordTitle:"Community Discord", discordDescription:"Austausch, Community & News",
+    discordLink:"Discord beitreten ↗", endLabel:"// END OF TRANSMISSION",
+    endTitle:'Stay curious.<br><span class="gradient">Keep creating.</span>',
+    endText:"Code für Code, Idee für Idee. Das ist erst der Anfang.",
+    backTop:"Zurück nach oben ↑", joinCommunity:"Meine Community ↗",
+    footer:"Mit ♥ und Code von Karl erstellt.",
+    rights:"Alle Rechte vorbehalten."
+  },
+  en: {
+    navHome:"Home", navAbout:"About", navProjects:"Projects",
+    navSocial:"Social Media", status:"Building",
+    welcome:"// Welcome to my website", hello:"Hey, I'm",
+    roles:"Coder × Gamer × Space Enthusiast",
+    intro:"Great to have you here! I'm interested in programming, galaxies and exciting projects. I'm also coding for a video game at NoEscape Studios. Explore my projects and community.",
+    heroProject:"My projects ↗", heroAbout:"About me ↓",
+    aboutLabel:"01 / ABOUT ME", aboutTitle:'Curious for <span class="gradient">more.</span>',
+    aboutText:"I'm Karl and I'm passionate about programming, technology, video games and astronomy. I love trying new things, learning and turning ideas into code. Galaxies and the mysteries of the universe fascinate me.",
+    tagSpace:"🌌 Astronomy", tagGames:"🎮 Gaming", tagCreative:"🚀 Creativity",
+    projectLabel:"02 / MY PROJECTS",
+    projectTitle:'Building something <span class="gradient">cool.</span>',
+    projectStatus:"PROJECT / GAME DEVELOPMENT",
+    gameDescription:"I'm part of a video game project at NoEscape Studios. I work on the project in my spare time and look forward to sharing more with the community.",
+    gameLink:"Project Discord ↗", buildingLabel:"CURRENTLY BUILDING",
+    buildingTitle:"My coding world",
+    buildingText:"I'm exploring new technologies, improving my skills and turning ideas into projects. Something new is taking shape, step by step.",
+    socialLabel:"03 / SOCIAL MEDIA",
+    socialTitle:'Stay <span class="gradient">connected.</span>',
+    socialIntro:"I'm building my social media presence. Drop by and become part of my community!",
+    tiktokDescription:"Videos & behind the scenes", tiktokLink:"Open TikTok ↗",
+    youtubeDescription:"Videos & projects", youtubeLink:"Open YouTube ↗",
+    discordTitle:"Community Discord", discordDescription:"Community, updates & chat",
+    discordLink:"Join Discord ↗", endLabel:"// END OF TRANSMISSION",
+    endTitle:'Stay curious.<br><span class="gradient">Keep creating.</span>',
+    endText:"One line of code, one idea at a time. This is just the beginning.",
+    backTop:"Back to top ↑", joinCommunity:"My community ↗",
+    footer:"Made with ♥ and code by Karl.",
+    rights:"All rights reserved."
+  }
+};
+
+let language = "de";
+const langBtn = document.getElementById("langBtn");
+
+function applyLanguage() {
+  const t = translations[language];
+  document.documentElement.lang = language;
+  langBtn.textContent = language === "de" ? "EN" : "DE";
+
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+}
+
+langBtn.addEventListener("click", () => {
+  language = language === "de" ? "en" : "de";
+  applyLanguage();
+});
+
+/* Animierter Sternenhimmel */
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d");
+let stars = [], w = 0, h = 0;
+
+function resizeStars() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  w = window.innerWidth;
+  h = window.innerHeight;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + "px";
+  canvas.style.height = h + "px";
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  stars = Array.from(
+    {length: Math.min(190, Math.floor(w * h / 6000))},
+    () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: Math.random() * 1.5 + .3,
+      phase: Math.random() * 6.28,
+      speed: Math.random() * .02 + .004
+    })
+  );
+}
+
+function animateStars() {
+  ctx.clearRect(0, 0, w, h);
+
+  for (const s of stars) {
+    s.phase += s.speed;
+    const alpha = .2 + (Math.sin(s.phase) + 1) * .35;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = document.body.classList.contains("light")
+      ? `rgba(40,100,170,${alpha * .55})`
+      : `rgba(145,205,255,${alpha})`;
+    ctx.fill();
+  }
+
+  requestAnimationFrame(animateStars);
+}
+
+resizeStars();
+animateStars();
+window.addEventListener("resize", resizeStars);
+
+/* Scroll-Animationen */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("visible");
+      observer.unobserve(entry.target);
+    }
+  });
+}, {threshold: .12});
+
+document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+/* Navigation: aktiven Bereich markieren */
+const sections = document.querySelectorAll("main section[id]");
+const navLinks = document.querySelectorAll("nav a");
+
+const navObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => {
+        link.classList.toggle(
+          "active",
+          link.getAttribute("href") === "#" + entry.target.id
+        );
+      });
+    }
+  });
+}, {rootMargin: "-20% 0px -65% 0px"});
+
+sections.forEach(section => navObserver.observe(section));
+
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
